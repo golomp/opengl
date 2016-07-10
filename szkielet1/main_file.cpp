@@ -27,6 +27,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "constants.h"
 #include <iostream>
 #include "allmodels.h"
+#include "bullet.h"
 
 float speed = 2.0f; // [radiany/s]
 GLfloat cameraSpeed = 0.05f;
@@ -38,6 +39,8 @@ float forward = 0;
 float pitch_angle = 0;
 float yaw_angle = 0;
 float roll_angle = 0;
+bool shoot = false;
+int howManyBullets = 0;
 
 
 Models::Torus myTorus(1.7f, 0.3f, 36, 36);
@@ -49,6 +52,7 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 glm::vec3 direction;
 glm::vec3 roll_vector;
+Bullet bullets[100];
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod) {
@@ -78,6 +82,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_LEFT_CONTROL:
 			--forward;
 			break;
+		case GLFW_KEY_SPACE:
+			shoot = true;
+			break;
 		}
 	} 
 	if (action == GLFW_RELEASE) {
@@ -106,6 +113,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_LEFT_CONTROL:
 			//++forward;
 			break;
+		case GLFW_KEY_SPACE:
+			shoot = false;
+			break;
 		}
 	}
 }
@@ -129,6 +139,52 @@ void transform_camera_vectors(glm::mat4 rotation_mat) {
 	cameraRight = glm::vec3(rotation_mat * glm::vec4(cameraRight, 0.0f));
 	cameraUp = glm::vec3(rotation_mat * glm::vec4(cameraUp, 0.0f));
 	cameraFront = glm::vec3(rotation_mat * glm::vec4(cameraFront, 0.0f));
+}
+
+void addObjects() {
+	if (shoot == true) {
+		bullets[howManyBullets].direction = cameraFront;
+		std::cout << asin(-1.0f) << std::endl;
+		std::cout << "x " << cameraFront.x << ", y " << cameraFront.y << ", z " << cameraFront.z << std::endl;
+		glm::mat4 mt1 = glm::mat4(1.0f);
+		glm::mat4 mt2 = glm::mat4(1.0f);
+		mt1 = translate(mt1, cameraPos);
+
+		
+	
+		if (bullets[howManyBullets].direction.x >= 0) {
+			mt1 = rotate(mt1, PI/2.0f + asin(cameraFront.z / sqrt(cameraFront.z*cameraFront.z + cameraFront.x*cameraFront.x)), glm::vec3(0, -1, 0));
+		}
+		else {
+			mt1 = rotate(mt1, -1.57f - asin(cameraFront.z / sqrt(cameraFront.z*cameraFront.z + cameraFront.x*cameraFront.x)), glm::vec3(0, -1, 0));
+		}
+		mt1 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
+		/*if (bullets[howManyBullets].direction.z <= 0) {
+			mt1 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
+		}
+		else {
+			mt1 = rotate(mt1, 3.14f - asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
+		}*/
+		
+
+		//mt2 = rotate(mt1, 90.0f, glm::vec3(0, 1, 0));
+
+		//mt1 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
+		//mt2 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
+		//bullets[howManyBullets].direction = glm::vec3(mt2 * glm::vec4(bullets[howManyBullets].direction, 1.0));
+		bullets[howManyBullets].m = mt1;
+		bullets[howManyBullets].alive = true;
+		++howManyBullets;
+		shoot = false;
+	}
+}
+
+void moveObjects() {
+	for (int i = 0; i < howManyBullets; i++) {
+		if (bullets[i].alive) {
+			bullets[i].m = translate(bullets[i].m, glm::vec3(0.f,0.f,-1.f) * 0.2f);
+		}
+	}
 }
 
 void moveCamera(double time) {
@@ -244,7 +300,6 @@ void drawScene(GLFWwindow* window, float angle) {
 
 	glm::mat4 mt0 = glm::mat4(1.0f);
 	mt0 = translate(mt0, glm::vec3(2, 0, 0));
-	mt0 = rotate(mt0, angle, glm::vec3(0, 0, 1));
 
 	glLoadMatrixf(glm::value_ptr(view*mt0));
 
@@ -252,11 +307,16 @@ void drawScene(GLFWwindow* window, float angle) {
 
 	glm::mat4 mt1 = glm::mat4(1.0f);
 	mt1 = translate(mt1, glm::vec3(-2, 0, 0));
-	mt1 = rotate(mt1, -angle, glm::vec3(0, 0, 1));
 
 	glLoadMatrixf(glm::value_ptr(view*mt1));
 
 	myTorus.drawWire(); //Narysuj torus
+	for (int i = 0; i < howManyBullets; i++) {
+		if (bullets[i].alive) {
+			glLoadMatrixf(glm::value_ptr(view*bullets[i].m));
+			myTorus.drawWire();		
+		}
+	}
 
 	//Przerzuæ tylny bufor na przedni
 	glfwSwapBuffers(window);
@@ -302,6 +362,8 @@ int main(void)
 	{
 		//std::cout << glfwGetTime()<<std::endl;
 		moveCamera(glfwGetTime());
+		addObjects();
+		moveObjects();
 		glfwSetTime(0);
 		drawScene(window,angle); //Wykonaj procedurê rysuj¹c¹
 		glfwPollEvents(); //Wykonaj procedury callback w zaleznoœci od zdarzeñ jakie zasz³y.

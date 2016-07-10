@@ -1,19 +1,19 @@
 ﻿  main_file.cpp
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(141): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(145): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(148): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(153): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(156): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(159): warning C4305: '/=': truncation from 'long double' to 'float'
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(168): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(171): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(176): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(179): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(183): warning C4305: '/=': truncation from 'long double' to 'float'
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(191): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(194): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(199): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(202): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(206): warning C4305: '/=': truncation from 'long double' to 'float'
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(197): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(201): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(204): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(209): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(212): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(215): warning C4305: '/=': truncation from 'long double' to 'float'
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(224): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(227): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(232): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(235): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(239): warning C4305: '/=': truncation from 'long double' to 'float'
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(247): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(250): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(255): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(258): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
+c:\users\maciek\documents\openglhaha\szkielet1\main_file.cpp(262): warning C4305: '/=': truncation from 'long double' to 'float'
   szkielet1.vcxproj -> C:\Users\maciek\Documents\openglhaha\Debug\szkielet1.exe
   szkielet1.vcxproj -> C:\Users\maciek\Documents\openglhaha\Debug\szkielet1.pdb (Full PDB)
