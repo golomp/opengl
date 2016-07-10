@@ -52,7 +52,7 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 glm::vec3 direction;
 glm::vec3 roll_vector;
-Bullet bullets[100];
+Bullet bullets[10000];
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod) {
@@ -149,30 +149,25 @@ void addObjects() {
 		glm::mat4 mt1 = glm::mat4(1.0f);
 		glm::mat4 mt2 = glm::mat4(1.0f);
 		mt1 = translate(mt1, cameraPos);
+		mt2 = translate(mt2, cameraPos);
+		mt1 = translate(mt1, cameraRight);
+		mt2 = translate(mt2, cameraRight * -1.f);
 
-		
-	
 		if (bullets[howManyBullets].direction.x >= 0) {
 			mt1 = rotate(mt1, PI/2.0f + asin(cameraFront.z / sqrt(cameraFront.z*cameraFront.z + cameraFront.x*cameraFront.x)), glm::vec3(0, -1, 0));
+			mt2 = rotate(mt2, PI / 2.0f + asin(cameraFront.z / sqrt(cameraFront.z*cameraFront.z + cameraFront.x*cameraFront.x)), glm::vec3(0, -1, 0));
 		}
 		else {
 			mt1 = rotate(mt1, -1.57f - asin(cameraFront.z / sqrt(cameraFront.z*cameraFront.z + cameraFront.x*cameraFront.x)), glm::vec3(0, -1, 0));
+			mt2 = rotate(mt2, -1.57f - asin(cameraFront.z / sqrt(cameraFront.z*cameraFront.z + cameraFront.x*cameraFront.x)), glm::vec3(0, -1, 0));
 		}
 		mt1 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
-		/*if (bullets[howManyBullets].direction.z <= 0) {
-			mt1 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
-		}
-		else {
-			mt1 = rotate(mt1, 3.14f - asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
-		}*/
-		
+		mt2 = rotate(mt2, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
 
-		//mt2 = rotate(mt1, 90.0f, glm::vec3(0, 1, 0));
-
-		//mt1 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
-		//mt2 = rotate(mt1, asin(bullets[howManyBullets].direction.y), glm::vec3(1, 0, 0));
-		//bullets[howManyBullets].direction = glm::vec3(mt2 * glm::vec4(bullets[howManyBullets].direction, 1.0));
 		bullets[howManyBullets].m = mt1;
+		bullets[howManyBullets].alive = true;
+		++howManyBullets;
+		bullets[howManyBullets].m = mt2;
 		bullets[howManyBullets].alive = true;
 		++howManyBullets;
 		shoot = false;
@@ -182,7 +177,7 @@ void addObjects() {
 void moveObjects() {
 	for (int i = 0; i < howManyBullets; i++) {
 		if (bullets[i].alive) {
-			bullets[i].m = translate(bullets[i].m, glm::vec3(0.f,0.f,-1.f) * 0.2f);
+			bullets[i].m = translate(bullets[i].m, glm::vec3(0.f,0.f,-1.f) * 0.9f);
 		}
 	}
 }
