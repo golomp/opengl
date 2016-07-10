@@ -55,16 +55,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (action == GLFW_PRESS) {
 		switch (key) {
 		case GLFW_KEY_A:
-			--yaw;
+			++yaw;
 			break;
 		case GLFW_KEY_D:
-			++yaw;
-			break;	
+			--yaw;
+			break;
 		case GLFW_KEY_W:
-			--pitch;
+			++pitch;
 			break;
 		case GLFW_KEY_S:
-			++pitch;
+			--pitch;
 			break;
 		case GLFW_KEY_Q:
 			--roll;
@@ -83,16 +83,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (action == GLFW_RELEASE) {
 		switch (key) {
 		case GLFW_KEY_A:
-			++yaw;
-			break;
-		case GLFW_KEY_D:
 			--yaw;
 			break;
+		case GLFW_KEY_D:
+			++yaw;
+			break;	
 		case GLFW_KEY_W:
-			++pitch;
+			--pitch;
 			break;
 		case GLFW_KEY_S:
-			--pitch;
+			++pitch;
 			break;
 		case GLFW_KEY_Q:
 			++roll;
@@ -131,45 +131,109 @@ void transform_camera_vectors(glm::mat4 rotation_mat) {
 	cameraFront = glm::vec3(rotation_mat * glm::vec4(cameraFront, 0.0f));
 }
 
+void moveCamera(double time) {
+	glm::mat4 M = glm::mat4(1.0f);
+
+	double forward_speed = 5l * time;
+	//pitch_angle = 4l * time * pitch;
+	//yaw_angle = 4l * time * yaw;
+	//roll_angle = 6l *time * roll;
+	cameraSpeed = 1l * time  * forward;
+	
+	if (pitch == 1) {
+		if (pitch_angle < 0.05) {
+			pitch_angle += 0.04l * time;
+		}
+		if (pitch_angle < 0) {
+			pitch_angle += 0.06l * time;
+		}
+	}
+	else if (pitch == -1) {
+		if (pitch_angle > -0.05) {
+			pitch_angle -= 0.04l * time;
+		}
+		if (pitch_angle > 0) {
+			pitch_angle -= 0.06l * time;
+		}
+	} else {
+		pitch_angle /= 1.1l;
+		if (abs(pitch_angle) < 0.00000000002) {
+			pitch_angle = 0;
+		}
+	}
+
+
+	if (roll == 1) {
+		if (roll_angle < 0.05) {
+			roll_angle += 0.04l * time;
+		}
+		if (roll_angle < 0) {
+			roll_angle += 0.06l * time;
+		}
+	}
+	else if (roll == -1) {
+		if (roll_angle > -0.05) {
+			roll_angle -= 0.04l * time;
+		}
+		if (roll_angle > 0) {
+			roll_angle -= 0.06l * time;
+		}
+	}
+	else {
+		roll_angle /= 1.1l;
+		if (abs(roll_angle) < 0.00000000002) {
+			roll_angle = 0;
+		}
+	}
+
+	if (yaw == 1) {
+		if (yaw_angle < 0.05) {
+			yaw_angle += 0.04l * time;
+		}
+		if (yaw_angle < 0) {
+			yaw_angle += 0.06l * time;
+		}
+	}
+	else if (yaw == -1) {
+		if (yaw_angle > -0.05) {
+			yaw_angle -= 0.04l * time;
+		}
+		if (yaw_angle > 0) {
+			yaw_angle -= 0.06l * time;
+		}
+	}
+	else {
+		yaw_angle /= 1.1l;
+		if (abs(yaw_angle) < 0.00000000002) {
+			yaw_angle = 0;
+		}
+	}
+
+	glm::mat4 rotationMat(1);
+	rotationMat = glm::rotate(rotationMat, pitch_angle, cameraRight);
+	transform_camera_vectors(rotationMat);
+
+	
+	rotationMat = glm::mat4(1);
+	rotationMat = glm::rotate(rotationMat, roll_angle, cameraFront);
+	transform_camera_vectors(rotationMat);
+	
+
+	rotationMat = glm::mat4(1);
+	rotationMat = glm::rotate(rotationMat, yaw_angle, cameraUp);
+	transform_camera_vectors(rotationMat);
+	
+	
+	if (forward != 0) {
+		cameraPos += cameraFront * cameraSpeed;
+	}
+
+	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+}
 //Procedura rysuj¹ca zawartoœæ sceny
 void drawScene(GLFWwindow* window, float angle) {
 	//************Tutaj umieszczaj kod rysuj¹cy obraz******************l
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
-
-	glm::mat4 M = glm::mat4(1.0f);
-	//M = glm::rotate(M, speed, glm::vec3(0, 1, 0)); //Wylicz macierz obrotu o k¹t angle wokó³ osi Y
-	//cameraPos += cameraSpeed * cameraFront * pitch;
-	//cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * yaw;
-	float forward_speed = 0.05;
-	pitch_angle = 0.04f * pitch;
-	yaw_angle = 0.04f * yaw;
-	roll_angle = 0.06f * roll;
-	cameraSpeed = 0.001f * forward;
-	if (pitch != 0) {
-		glm::mat4 rotationMat(1);
-		rotationMat = glm::rotate(rotationMat, pitch_angle, cameraRight);
-		transform_camera_vectors(rotationMat);		
-	}
-	if (roll != 0) {
-		glm::mat4 rotationMat(1);
-		rotationMat = glm::rotate(rotationMat, roll_angle, cameraFront);
-		transform_camera_vectors(rotationMat);
-	}
-	if (yaw != 0) {
-		glm::mat4 rotationMat(1);
-		rotationMat = glm::rotate(rotationMat, yaw_angle, cameraUp);
-		transform_camera_vectors(rotationMat);
-	}
-	if (forward != 0) {
-		cameraPos += cameraFront * cameraSpeed;
-	}
-	//direction.x = cos(pitch_angle) * cos(yaw_angle);
-	//direction.y = sin(pitch_angle);
-	//direction.z = cos(pitch_angle) * sin(yaw_angle);
-	//cameraFront = glm::normalize(direction);
-	//cameraUp = glm::rotate(cameraUp, 0.5f, cameraFront);
-	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
 	glm::mat4 P = glm::perspective(50 * PI / 180, 1.0f, 0.05f, 50.0f); //Wylicz macierz rzutowania
 
 	//Za³aduj macierze do OpenGL
@@ -236,10 +300,12 @@ int main(void)
 	//G³ówna pêtla
 	while (!glfwWindowShouldClose(window)) //Tak d³ugo jak okno nie powinno zostaæ zamkniête
 	{
-		cur_speed = speed*glfwGetTime(); //Zwiêksz k¹t o prêdkoœæ k¹tow¹ razy czas jaki up³yn¹³ od poprzedniej klatki
-		glfwSetTime(0); //Wyzeruj licznik czasu
+		//std::cout << glfwGetTime()<<std::endl;
+		moveCamera(glfwGetTime());
+		glfwSetTime(0);
 		drawScene(window,angle); //Wykonaj procedurê rysuj¹c¹
 		glfwPollEvents(); //Wykonaj procedury callback w zaleznoœci od zdarzeñ jakie zasz³y.
+		//Wyzeruj licznik czasu
 	}
 
 	glfwDestroyWindow(window); //Usuñ kontekst OpenGL i okno
