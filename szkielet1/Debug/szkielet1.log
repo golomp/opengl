@@ -1,20 +1,4 @@
-﻿  shipState.cpp
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(15): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(19): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(22): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(27): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(30): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(34): warning C4305: '/=': truncation from 'long double' to 'float'
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(43): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(46): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(51): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(54): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(58): warning C4305: '/=': truncation from 'long double' to 'float'
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(66): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(69): warning C4244: '+=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(74): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(77): warning C4244: '-=': conversion from 'long double' to 'float', possible loss of data
-c:\users\maciek\documents\openglhaha\szkielet1\shipstate.cpp(81): warning C4305: '/=': truncation from 'long double' to 'float'
+﻿  main_file.cpp
 cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   szkielet1.vcxproj -> C:\Users\maciek\Documents\openglhaha\Debug\szkielet1.exe
   szkielet1.vcxproj -> C:\Users\maciek\Documents\openglhaha\Debug\szkielet1.pdb (Full PDB)

@@ -30,12 +30,17 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "bullet.h"
 #include "shipNextMove.h"
 #include "shipState.h"
+#include "bullet.h"
+#include "target.h"
 
 Models::Torus myTorus(1.7f, 0.3f, 36, 36);
-
-
 shipNextMove nextMove;
 shipState ship;
+const int howManyTargets = 15;
+
+const int randTargetRange = 50;
+Target targets[howManyTargets];
+
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod) {
@@ -105,9 +110,30 @@ void drawScene(GLFWwindow* window, float angle) {
 		}
 	}
 
+	for (int i = 0; i < howManyTargets; i++) {
+			glLoadMatrixf(glm::value_ptr(ship.view*targets[i].m));
+			myTorus.drawWire();
+	}
+
+
 	//Przerzuæ tylny bufor na przedni
 	glfwSwapBuffers(window);
 
+}
+
+void initTargets() {
+	for (int i = 0; i < howManyTargets; i++) {
+		glm::mat4 m = glm::mat4(1.0f);
+		glm::vec3 pos = glm::vec3((rand() % randTargetRange) - randTargetRange/2, (rand() % randTargetRange) - randTargetRange / 2, (rand() % randTargetRange) - randTargetRange / 2);
+		targets[i].m = rotate(targets[i].m, (float) rand(), pos);
+		targets[i].m = translate(targets[i].m, pos);
+	}
+}
+
+void rotateTargets(double time) {
+	for (int i = 0; i < howManyTargets; i++) {
+		targets[i].m = rotate(targets[i].m, (float)time, glm::vec3(1,0,0));
+	}
 }
 
 int main(void)
@@ -144,11 +170,14 @@ int main(void)
 	float angle = 0; //K¹t obrotu torusa
 	glfwSetTime(0); //Wyzeruj licznik czasu
 
+	initTargets();
+
 	//G³ówna pêtla
 	while (!glfwWindowShouldClose(window)) //Tak d³ugo jak okno nie powinno zostaæ zamkniête
 	{
 		//std::cout << glfwGetTime()<<std::endl;
 		ship.moveCamera(glfwGetTime(), nextMove);
+		rotateTargets(glfwGetTime());
 		addObjects();
 		moveObjects();
 		glfwSetTime(0);
