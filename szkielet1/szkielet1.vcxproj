@@ -157,6 +157,8 @@
     <ClCompile Include="detailed_cube.cpp" />
     <ClCompile Include="main_file.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="shipNextMove.cpp" />
+    <ClCompile Include="shipState.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="teapot.cpp" />
     <ClCompile Include="torus.cpp" />
@@ -168,7 +170,10 @@
     <ClInclude Include="cube.h" />
     <ClInclude Include="detailed_cube.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="shipNextMove.h" />
+    <ClInclude Include="shipState.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="target.h" />
     <ClInclude Include="teapot.h" />
     <ClInclude Include="torus.h" />
   </ItemGroup>
