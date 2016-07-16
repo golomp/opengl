@@ -34,9 +34,11 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "target.h"
 
 Models::Torus myTorus(1.7f, 0.3f, 36, 36);
+Models::Torus miniTorus(0.3f, 0.3f, 10, 10);
 shipNextMove nextMove;
 shipState ship;
 const int howManyTargets = 15;
+int points = 0;
 
 const int randTargetRange = 50;
 Target targets[howManyTargets];
@@ -106,13 +108,16 @@ void drawScene(GLFWwindow* window, float angle) {
 	for (int i = 0; i < ship.howManyBullets; i++) {
 		if (ship.bullets[i].alive) {
 			glLoadMatrixf(glm::value_ptr(ship.view*ship.bullets[i].m));
-			myTorus.drawWire();		
+			miniTorus.drawSolid();
 		}
 	}
 
 	for (int i = 0; i < howManyTargets; i++) {
+		if (targets[i].alive) {
 			glLoadMatrixf(glm::value_ptr(ship.view*targets[i].m));
 			myTorus.drawWire();
+			miniTorus.drawSolid();
+		}
 	}
 
 
@@ -125,7 +130,8 @@ void initTargets() {
 	for (int i = 0; i < howManyTargets; i++) {
 		glm::mat4 m = glm::mat4(1.0f);
 		glm::vec3 pos = glm::vec3((rand() % randTargetRange) - randTargetRange/2, (rand() % randTargetRange) - randTargetRange / 2, (rand() % randTargetRange) - randTargetRange / 2);
-		targets[i].m = rotate(targets[i].m, (float) rand(), pos);
+		targets[i].position = glm::vec4(pos, 1.0f);
+		//targets[i].m = rotate(targets[i].m, (float) rand(), pos);
 		targets[i].m = translate(targets[i].m, pos);
 	}
 }
@@ -133,6 +139,32 @@ void initTargets() {
 void rotateTargets(double time) {
 	for (int i = 0; i < howManyTargets; i++) {
 		targets[i].m = rotate(targets[i].m, (float)time, glm::vec3(1,0,0));
+	}
+}
+
+float calcDistance(glm::vec4 a, glm::vec4 b) {
+	return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
+ }
+
+void checkForCollision() {
+	glm::vec4 zero = glm::vec4(0, 0, 0, 0);
+	glm::vec4 targetPosition;
+	glm::vec4 bulletPosition;
+	float dist;
+	for (int t = 0; t < howManyTargets; t++) {
+		for (int b = 0; b < ship.howManyBullets; b++) {
+			if (targets[t].alive && ship.bullets[b].alive) {
+				targetPosition = glm::vec4(targets[t].m[3][0], targets[t].m[3][1], targets[t].m[3][2], 1.0f);
+				bulletPosition = glm::vec4(ship.bullets[b].m[3][0], ship.bullets[b].m[3][1], ship.bullets[b].m[3][2], 1.0f);
+				dist = calcDistance(targetPosition, bulletPosition);
+				if (dist < 1.0f) {
+					targets[t].alive = false;
+					ship.bullets[b].alive = false;
+					++points;
+					std::cout << "points " << points << std::endl;
+				}
+			}
+		}
 	}
 }
 
@@ -180,6 +212,7 @@ int main(void)
 		rotateTargets(glfwGetTime());
 		addObjects();
 		moveObjects();
+		checkForCollision();
 		glfwSetTime(0);
 		drawScene(window,angle); //Wykonaj procedurê rysuj¹c¹
 		glfwPollEvents(); //Wykonaj procedury callback w zaleznoœci od zdarzeñ jakie zasz³y.

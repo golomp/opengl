@@ -27,6 +27,7 @@ class Target {
 public:
 	glm::mat4 m;
 	bool alive = true;
+	glm::vec4 position;
 };
 
 #endif
