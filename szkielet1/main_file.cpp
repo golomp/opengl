@@ -32,6 +32,10 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "shipState.h"
 #include "bullet.h"
 #include "target.h"
+#include "lodepng.h"
+
+GLuint tex;
+
 
 Models::Torus myTorus(1.7f, 0.3f, 36, 36);
 Models::Torus miniTorus(0.3f, 0.3f, 10, 10);
@@ -61,7 +65,23 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glEnable(GL_LIGHT0); //W³¹cz domyslne œwiat³o
 	glEnable(GL_DEPTH_TEST); //W³¹cz u¿ywanie Z-Bufora
 	glEnable(GL_COLOR_MATERIAL); //glColor3d ma modyfikowaæ w³asnoœci materia³u
+	glEnable(GL_TEXTURE_2D);
 	
+								 //Wczytanie do pamiêci komputera
+	std::vector<unsigned char> image;   //Alokuj wektor do wczytania obrazka
+	unsigned width, height;   //Zmienne do których wczytamy wymiary obrazka
+							  //Wczytaj obrazek
+	unsigned error = lodepng::decode(image, width, height, "brick.png");
+
+	//Import do pamiêci karty graficznej
+	glGenTextures(1, &tex); //Zainicjuj jeden uchwyt
+	glBindTexture(GL_TEXTURE_2D, tex); //Uaktywnij uchwyt
+									   //Wczytaj obrazek do pamiêci KG skojarzonej z uchwytem
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_SPHERE_MAP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_SPHERE_MAP);
 }
 
 
@@ -90,21 +110,22 @@ void drawScene(GLFWwindow* window, float angle) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(glm::value_ptr(P));
 	glMatrixMode(GL_MODELVIEW);
-	glColor3d(0, 1, 0); //Rysuj na zielono	
+	glColor3d(1, 1, 1); //Rysuj na bia³o
+	glBindTexture(GL_TEXTURE_2D, tex);
 
 	glm::mat4 mt0 = glm::mat4(1.0f);
 	mt0 = translate(mt0, glm::vec3(2, 0, 0));
 
 	glLoadMatrixf(glm::value_ptr(ship.view*mt0));
 
-	myTorus.drawWire(); //Narysuj torus
+	myTorus.drawSolid(); //Narysuj torus
 
 	glm::mat4 mt1 = glm::mat4(1.0f);
 	mt1 = translate(mt1, glm::vec3(-2, 0, 0));
 
 	glLoadMatrixf(glm::value_ptr(ship.view*mt1));
 
-	myTorus.drawWire(); //Narysuj torus
+	myTorus.drawSolid(); //Narysuj torus
 	for (int i = 0; i < ship.howManyBullets; i++) {
 		if (ship.bullets[i].alive) {
 			glLoadMatrixf(glm::value_ptr(ship.view*ship.bullets[i].m));
@@ -115,11 +136,11 @@ void drawScene(GLFWwindow* window, float angle) {
 	for (int i = 0; i < howManyTargets; i++) {
 		if (targets[i].alive) {
 			glLoadMatrixf(glm::value_ptr(ship.view*targets[i].m));
-			myTorus.drawWire();
+			myTorus.drawSolid();
 			miniTorus.drawSolid();
 		}
 	}
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//Przerzuæ tylny bufor na przedni
 	glfwSwapBuffers(window);
