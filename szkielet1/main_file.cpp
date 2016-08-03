@@ -64,10 +64,14 @@ void initOpenGLProgram(GLFWwindow* window) {
 	//************Tutaj umieszczaj kod, który nale¿y wykonaæ raz, na pocz¹tku programu************
 	glClearColor(0, 0, 0, 1); //Czyœæ ekran na czarno
 	//glEnable(GL_LIGHTING); //W³¹cz tryb cieniowania
-	glEnable(GL_LIGHT0); //W³¹cz domyslne œwiat³o
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST); //W³¹cz u¿ywanie Z-Bufora
 	glEnable(GL_COLOR_MATERIAL); //glColor3d ma modyfikowaæ w³asnoœci materia³u
 	glEnable(GL_TEXTURE_2D);
+	float lightPos[] = { 1,1,1,0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 	
 								 //Wczytanie do pamiêci komputera
 	std::vector<unsigned char> image;   //Alokuj wektor do wczytania obrazka
