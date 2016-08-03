@@ -80,8 +80,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_SPHERE_MAP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_SPHERE_MAP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 
@@ -141,7 +141,6 @@ void drawScene(GLFWwindow* window, float angle) {
 		}
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	//Przerzuæ tylny bufor na przedni
 	glfwSwapBuffers(window);
 
