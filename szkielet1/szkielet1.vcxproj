@@ -155,6 +155,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="detailed_cube.cpp" />
+    <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main_file.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="shipNextMove.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="detailed_cube.h" />
+    <ClInclude Include="lodepng.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="shipNextMove.h" />
     <ClInclude Include="shipState.h" />

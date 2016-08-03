@@ -35,10 +35,12 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "lodepng.h"
 
 GLuint tex;
+GLuint skybox;
 
 
 Models::Torus myTorus(1.7f, 0.3f, 36, 36);
 Models::Torus miniTorus(0.3f, 0.3f, 10, 10);
+Models::Cube skycube;
 shipNextMove nextMove;
 shipState ship;
 const int howManyTargets = 15;
@@ -80,6 +82,23 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
 
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+	std::vector<unsigned char> simage;
+	unsigned swidth, sheight;   //Zmienne do których wczytamy wymiary obrazka
+							  //Wczytaj obrazek
+	unsigned serror = lodepng::decode(simage, swidth, sheight, "skybox.png");
+
+	//Import do pamiêci karty graficznej
+	glGenTextures(1, &skybox); //Zainicjuj jeden uchwyt
+	glBindTexture(GL_TEXTURE_2D, skybox); //Uaktywnij uchwyt
+									   //Wczytaj obrazek do pamiêci KG skojarzonej z uchwytem
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, swidth, sheight, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)simage.data());
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
@@ -104,13 +123,23 @@ void moveObjects() {
 void drawScene(GLFWwindow* window, float angle) {
 	//************Tutaj umieszczaj kod rysuj¹cy obraz******************l
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
-	glm::mat4 P = glm::perspective(50 * PI / 180, 1.0f, 0.05f, 50.0f); //Wylicz macierz rzutowania
+	glm::mat4 P = glm::perspective(50 * PI / 180, 1.0f, 0.05f, 300.0f); //Wylicz macierz rzutowania
 
 	//Za³aduj macierze do OpenGL
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(glm::value_ptr(P));
 	glMatrixMode(GL_MODELVIEW);
 	glColor3d(1, 1, 1); //Rysuj na bia³o
+
+	glBindTexture(GL_TEXTURE_2D, skybox);
+
+	glm::mat4 skymat = glm::mat4(1.0f);
+	skymat = scale(skymat, glm::vec3(50, 50, 50));
+	glLoadMatrixf(glm::value_ptr(ship.view*skymat));
+
+	skycube.drawSolid();
+	
+
 	glBindTexture(GL_TEXTURE_2D, tex);
 
 	glm::mat4 mt0 = glm::mat4(1.0f);
@@ -177,7 +206,7 @@ void checkForCollision() {
 				targetPosition = glm::vec4(targets[t].m[3][0], targets[t].m[3][1], targets[t].m[3][2], 1.0f);
 				bulletPosition = glm::vec4(ship.bullets[b].m[3][0], ship.bullets[b].m[3][1], ship.bullets[b].m[3][2], 1.0f);
 				dist = calcDistance(targetPosition, bulletPosition);
-				if (dist < 1.0f) {
+				if (dist < 2.0f) {
 					targets[t].alive = false;
 					ship.bullets[b].alive = false;
 					++points;
